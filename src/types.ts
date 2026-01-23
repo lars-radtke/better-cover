@@ -52,3 +52,17 @@ export interface Size extends Width, Height {}
  * {@link Rectangle} defined by a {@link Position} and a {@link Size}.
  */
 export interface Rectangle extends Position, Size {}
+
+/**
+ * {@link Screen} information including {@link Size}, device pixel ratio and orientation.
+ */
+export interface Screen extends Size {
+  /**
+   * Device pixel ratio.
+   */
+  dpr: number;
+  /**
+   * Orientation of the screen.
+   */
+  orientation: "portrait" | "landscape";
+}
