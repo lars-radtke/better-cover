@@ -1,0 +1,57 @@
+{
+    "name": "better-cover",
+    "version": "0.0.1",
+    "description": "React image component with focus placement.",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/lars-radtke/better-cover.git"
+    },
+    "homepage": "https://github.com/lars-radtke/better-cover",
+    "license": "MIT",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        }
+    },
+    "peerDependencies": {
+        "react": ">=18.2.0",
+        "react-dom": ">=18.2.0"
+    },
+    "scripts": {
+        "build": "tsup src/index.ts --format esm --dts --clean",
+        "prepublishOnly": "npm run build"
+    },
+    "devDependencies": {
+        "tsup": "^8",
+        "typescript": "^5",
+        "react": ">=18.2.0",
+        "react-dom": ">=18.2.0"
+    },
+    "author": "Lars Radtke (https://github.com/lars-radtke)",
+    "type": "module",
+    "bugs": {
+        "url": "https://github.com/lars-radtke/better-cover/issues"
+    },
+    "keywords": [
+        "react",
+        "nextjs",
+        "next",
+        "image",
+        "img",
+        "picture",
+        "responsive-image",
+        "cover",
+        "object-fit",
+        "object-position",
+        "focus",
+        "focal-point",
+        "smart-crop"
+    ],
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
+    "sideEffects": false
+}
