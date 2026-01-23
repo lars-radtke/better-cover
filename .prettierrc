@@ -11,13 +11,5 @@
   "singleQuote": false,
   "tabWidth": 2,
   "trailingComma": "all",
-  "useTabs": false,
-  "plugins": [
-    "prettier-plugin-tailwindcss"
-  ],
-  "tailwindStylesheet": "./src/styles/index.css",
-  "tailwindFunctions": [
-    "twJoin",
-    "twMerge"
-  ]
+  "useTabs": false
 }
