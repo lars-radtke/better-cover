@@ -25,6 +25,13 @@ export interface PictureProps {
     alt?: string;
     /**
      * [OPTIONAL]
+     *
+     * {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img#loading Loading behavior} of the image.
+     * Defaults to "lazy".
+     */
+    loading?: "eager" | "lazy";
+    /**
+     * [OPTIONAL]
      * 
      * Pass React refs to selected elements within the Picture component.
      * 
@@ -45,12 +52,13 @@ export interface PictureProps {
      */
     debug?: boolean;
 };
-export const Picture = ({ src, srcSet, alt, refs, debug }: PictureProps) => {
+export const Picture = ({ src, srcSet, alt, loading = "lazy", refs, debug }: PictureProps) => {
 
     return (
         <>
             <div
-                ref={refs?.picture} className={`better-cover ${debug ? "--debug" : ""}`.trim()}
+                ref={refs?.picture}
+                className={`better-cover ${debug ? "--debug" : ""}`.trim()}
                 inert={debug || (alt && alt !== "") ? undefined : true}
             >
                 <picture>
@@ -59,6 +67,7 @@ export const Picture = ({ src, srcSet, alt, refs, debug }: PictureProps) => {
                         srcSet={srcSet ?? undefined}
                         src={src}
                         alt={alt ?? ""}
+                        loading={loading}
                     />
                 </picture>
                 {(refs?.focusZone || debug) && (
