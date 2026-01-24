@@ -1,6 +1,7 @@
 "use client";
 
 import { Refs } from "../types";
+import { trimString } from "../utils/trimString";
 
 export interface PictureProps {
     /**
@@ -17,17 +18,45 @@ export interface PictureProps {
     srcSet?: string;
     /**
      * [OPTIONAL]
+     *
+     * CSS class names to apply to the Picture component.
+     */
+    className?: string;
+    /**
+     * [OPTIONAL]
+     *
+     * CSS class names to apply to the targetZone element.
+     */
+    targetZoneClassName?: string;
+    /**
+     * [OPTIONAL]
+     *
+     * CSS class names to apply to the focusZone element.
+     * 
+     * Passing class names here causes the focusZone element to be rendered.
+     */
+    focusZoneClassName?: string;
+    /**
+     * [OPTIONAL]
+     *
+     * CSS class names to apply to the image element.
+     */
+    imageClassName?: string;
+    /**
+     * [OPTIONAL]  
      * [ACCESSIBILITY]
      *
      * Accessible alternative text for the image.
-     * If ommited, the image will be marked as decorative.
+     * 
+     * If omitted, the image will be marked as decorative.
      */
     alt?: string;
     /**
      * [OPTIONAL]
      *
      * {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/img#loading Loading behavior} of the image.
-     * Defaults to "lazy".
+     *
+     * Defaults to `lazy`.
      */
     loading?: "eager" | "lazy";
     /**
@@ -52,13 +81,41 @@ export interface PictureProps {
      */
     debug?: boolean;
 };
-export const Picture = ({ src, srcSet, alt, loading = "lazy", refs, debug }: PictureProps) => {
+
+
+export const Picture = ({
+    src,
+    srcSet,
+    className,
+    targetZoneClassName,
+    focusZoneClassName,
+    imageClassName,
+    alt,
+    loading = "lazy",
+    refs, debug
+}: PictureProps) => {
+
+    const PictureCSS = trimString([
+        "better-cover",
+        className,
+        debug && "--debug"
+    ].join(" "));
+
+    const FocusZoneCSS = trimString([
+        "better-cover__focus-zone",
+        focusZoneClassName
+    ].join(" "));
+
+    const TargetZoneCSS = trimString([
+        "better-cover__target-zone",
+        targetZoneClassName
+    ].join(" "));
 
     return (
         <>
             <div
                 ref={refs?.picture}
-                className={`better-cover ${debug ? "--debug" : ""}`.trim()}
+                className={PictureCSS}
                 inert={debug || (alt && alt !== "") ? undefined : true}
             >
                 <picture>
@@ -68,14 +125,21 @@ export const Picture = ({ src, srcSet, alt, loading = "lazy", refs, debug }: Pic
                         src={src}
                         alt={alt ?? ""}
                         loading={loading}
+                        className={imageClassName ? imageClassName : undefined}
                     />
                 </picture>
-                {(refs?.focusZone || debug) && (
+                {(refs?.focusZone || debug || focusZoneClassName) && (
                     <>
-                        <div ref={refs?.focusZone} className={`better-cover__focus-zone`} />
+                        <div
+                            ref={refs?.focusZone}
+                            className={FocusZoneCSS}
+                        />
                     </>
                 )}
-                <div ref={refs?.targetZone} className={`better-cover__target-zone`} />
+                <div
+                    ref={refs?.targetZone}
+                    className={TargetZoneCSS}
+                />
             </div>
         </>
     )
