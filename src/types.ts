@@ -66,3 +66,13 @@ export interface Screen extends Size {
    */
   orientation: "portrait" | "landscape";
 }
+
+/**
+ * Native attributes for the HTMLSourceElement.
+ *
+ * Omits attributes that conflict with or are handled by Better Cover.
+ */
+export type SourceNativeAttributes = Omit<
+  SourceHTMLAttributes<HTMLSourceElement>,
+  "type" | "src" | "sizes" | "height" | "width"
+>;
