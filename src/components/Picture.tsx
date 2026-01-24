@@ -1,7 +1,6 @@
 "use client";
 
 import { Refs } from "../types";
-import { pruneRefs } from "../utils/pruneRefs";
 
 export interface PictureProps {
     /**
@@ -19,23 +18,27 @@ export interface PictureProps {
      * ```
      */
     refs?: Refs;
+    /**
+     * [OPTIONAL]
+     *
+     * Display overlays for debugging purposes.
+     */
+    debug?: boolean;
 };
-export const Picture = ({ refs }: PictureProps) => {
-
-    const prunedRefs = pruneRefs(refs);
+export const Picture = ({ refs, debug }: PictureProps) => {
 
     return (
         <>
-            <div ref={prunedRefs?.picture} style={{ position: "relative" }}>
-                <picture style={{ display: "block", position: "absolute", inset: 0 }}>
-                    <img ref={prunedRefs?.image} />
+            <div ref={refs?.picture} className={`better-cover ${debug ? "--debug" : ""}`.trim()}>
+                <picture>
+                    <img ref={refs?.image} />
                 </picture>
-                {prunedRefs?.focusZone && (
+                {(refs?.focusZone || debug) && (
                     <>
-                        <div ref={prunedRefs.focusZone} style={{ position: "absolute" }} />
+                        <div ref={refs?.focusZone} className={`better-cover__focus-zone`} />
                     </>
                 )}
-                <div ref={prunedRefs?.targetZone} style={{ position: "absolute" }} />
+                <div ref={refs?.targetZone} className={`better-cover__target-zone`} />
             </div>
         </>
     )
