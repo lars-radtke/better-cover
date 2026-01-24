@@ -1,6 +1,7 @@
 "use client";
 
 import { Refs } from "../types";
+import { pruneRefs } from "../utils/pruneRefs";
 
 export interface PictureProps {
     /**
@@ -20,12 +21,21 @@ export interface PictureProps {
     refs?: Refs;
 };
 export const Picture = ({ refs }: PictureProps) => {
+
+    const prunedRefs = pruneRefs(refs);
+
     return (
         <>
-            <div ref={refs?.picture} style={{ position: "relative" }}>
+            <div ref={prunedRefs?.picture} style={{ position: "relative" }}>
                 <picture style={{ display: "block", position: "absolute", inset: 0 }}>
-                    <img />
+                    <img ref={prunedRefs?.image} />
                 </picture>
+                {prunedRefs?.focusZone && (
+                    <>
+                        <div ref={prunedRefs.focusZone} style={{ position: "absolute" }} />
+                    </>
+                )}
+                <div ref={prunedRefs?.targetZone} style={{ position: "absolute" }} />
             </div>
         </>
     )
