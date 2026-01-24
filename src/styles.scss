@@ -1,15 +1,9 @@
 .better-cover {
   position: relative;
 
-  picture {
+  img {
     display: block;
     position: absolute;
-    inset: 0;
-
-    img {
-      display: block;
-      position: absolute;
-    }
   }
 
   &__focus-zone {
@@ -18,5 +12,19 @@
 
   &__target-zone {
     position: absolute;
+  }
+
+  &.--debug {
+    border: 2px dotted black;
+
+    .better-cover__focus-zone {
+      border: 2px solid limegreen;
+      background-color: rgba(0, 255, 0, 0.2);
+    }
+
+    .better-cover__target-zone {
+      border: 2px dashed red;
+      background-color: rgba(255, 0, 0, 0.2);
+    }
   }
 }
