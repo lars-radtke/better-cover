@@ -54,5 +54,7 @@
         "README.md",
         "LICENSE"
     ],
-    "sideEffects": false
+    "sideEffects": [
+        "**/*.css"
+    ]
 }
