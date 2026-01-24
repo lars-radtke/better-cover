@@ -12,14 +12,17 @@
         ".": {
             "types": "./dist/index.d.ts",
             "default": "./dist/index.js"
-        }
+        },
+        "./styles.css": "./dist/styles.css"
     },
     "peerDependencies": {
         "react": "^19",
         "react-dom": "^19"
     },
     "scripts": {
-        "build": "tsup src/index.ts --format esm --dts --clean",
+        "build": "npm run build:js && npm run build:css",
+        "build:js": "tsup src/index.ts --format esm --dts --clean",
+        "build:css": "sass src/styles.scss dist/styles.css --no-source-map --style=compressed",
         "prepublishOnly": "npm run build"
     },
     "devDependencies": {
@@ -27,6 +30,7 @@
         "@types/react": "^19",
         "react": "^19",
         "react-dom": "^19",
+        "sass": "^1.97.3",
         "tsup": "^8",
         "typescript": "^5"
     },
