@@ -12,23 +12,49 @@ import { Source, SourceProps } from "../components/Source";
 export function isValidSource(
   child: React.ReactNode,
 ): child is React.ReactElement<SourceProps, typeof Source> {
-  if (!React.isValidElement(child) || child.type !== Source) return false;
+  const isDev =
+    typeof process.env.NODE_ENV === "undefined" || process.env.NODE_ENV !== "production";
+
+  if (!React.isValidElement(child) || child.type !== Source) {
+    if (isDev) console.warn("isValidSource: Child is not a valid Source element.");
+    return false;
+  }
 
   const { size, focusZone } = child.props as SourceProps;
 
-  // Check for required props
-  if (!size || !focusZone) return false;
-
-  // Check for non-positive values in size
-  if (size.width <= 0 || size.height <= 0) return false;
-
-  // Check for negative values in focusZone position and non-positive values in focusZone size
-  if (focusZone.x < 0 || focusZone.y < 0 || focusZone.width <= 0 || focusZone.height <= 0)
+  if (!size || !focusZone) {
+    if (isDev)
+      console.warn(
+        "isValidSource: Missing required props:",
+        !size && `'size'${!focusZone ? "," : ""}`,
+        !focusZone && "'focusZone'",
+        [].join(" "),
+      );
     return false;
+  }
 
-  // Check that focusZone does not exceed size boundaries
-  if (focusZone.x + focusZone.width > size.width || focusZone.y + focusZone.height > size.height)
+  if (size.width <= 0 || size.height <= 0) {
+    if (isDev) console.warn("isValidSource: 'size' must have positive width and height.", size);
     return false;
+  }
+
+  if (focusZone.x < 0 || focusZone.y < 0) {
+    if (isDev)
+      console.warn("isValidSource: 'focusZone' position (x, y) must not be negative.", focusZone);
+    return false;
+  }
+
+  if (focusZone.width <= 0 || focusZone.height <= 0) {
+    if (isDev)
+      console.warn("isValidSource: 'focusZone' width and height must be positive.", focusZone);
+    return false;
+  }
+
+  if (focusZone.x + focusZone.width > size.width || focusZone.y + focusZone.height > size.height) {
+    if (isDev)
+      console.warn("isValidSource: 'focusZone' exceeds 'size' boundaries.", { size, focusZone });
+    return false;
+  }
 
   return true;
 }
