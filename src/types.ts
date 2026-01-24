@@ -3,7 +3,7 @@
  */
 export interface Xcoordinate {
   /**
-   * Depending on the use case, may be presenting a pixel or percentage value.
+   * X coordinate in pixels.
    */
   x: number;
 }
@@ -13,7 +13,7 @@ export interface Xcoordinate {
  */
 export interface Ycoordinate {
   /**
-   * Depending on the use case, may be presenting a pixel or percentage value.
+   * Y coordinate in pixels.
    */
   y: number;
 }
@@ -28,7 +28,7 @@ export interface Position extends Xcoordinate, Ycoordinate {}
  */
 export interface Height {
   /**
-   * Depending on the use case, may be presenting a pixel or percentage value.
+   * Height of an element in pixels.
    */
   height: number;
 }
@@ -38,13 +38,13 @@ export interface Height {
  */
 export interface Width {
   /**
-   * Depending on the use case, may be presenting a pixel or percentage value.
+   * Width of an element in pixels.
    */
   width: number;
 }
 
 /**
- * {@link Size} of an element in a 2D plane composed of {@link Width} and {@link Height}.
+ * {@link Size} of an element composed of {@link Width} and {@link Height}.
  */
 export interface Size extends Width, Height {}
 
