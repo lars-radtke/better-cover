@@ -1,0 +1,22 @@
+.better-cover {
+  position: relative;
+
+  picture {
+    display: block;
+    position: absolute;
+    inset: 0;
+
+    img {
+      display: block;
+      position: absolute;
+    }
+  }
+
+  &__focus-zone {
+    position: absolute;
+  }
+
+  &__target-zone {
+    position: absolute;
+  }
+}
