@@ -2,8 +2,19 @@
 
 import { Refs } from "../types";
 import { trimString } from "../utils/trimString";
+import { Source, SourceElement } from "./Source";
 
+/**
+ * Props for the {@link Picture} component.
+ */
 export interface PictureProps {
+    /**
+     * [REQUIRED]
+     *
+     * Source Elements to be used within the Picture component.
+     * At least one Source component must be provided.
+     */
+    children: SourceElement | [SourceElement, ...SourceElement[]];
     /**
      * [REQUIRED]
      * 
@@ -82,7 +93,6 @@ export interface PictureProps {
     debug?: boolean;
 };
 
-
 export const Picture = ({
     src,
     srcSet,
@@ -144,3 +154,5 @@ export const Picture = ({
         </>
     )
 }
+
+export type PictureElement = React.ReactElement<PictureProps, typeof Picture>;
