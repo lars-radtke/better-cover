@@ -3,16 +3,16 @@ import { SourceHTMLAttributes } from "react";
 export const REF_KEYS = ["picture", "targetZone", "focusZone", "image"] as const;
 
 /**
- * Keys for specific elements within {@link Picture} that can be passed a ref to.
+ * Maps React DOM refs to their corresponding {@link Picture} component elements.
  *
  * _Keys do not correlate to HTML element names._
  */
-export type RefElement = (typeof REF_KEYS)[number];
-
-/**
- * Maps React DOM refs to {@link RefElement|element keys}.
- */
-export type Refs = Partial<Record<RefElement, React.RefObject<HTMLDivElement | HTMLImageElement>>>;
+export type Refs = {
+  picture?: React.RefObject<HTMLDivElement>;
+  targetZone?: React.RefObject<HTMLDivElement>;
+  focusZone?: React.RefObject<HTMLDivElement>;
+  image?: React.RefObject<HTMLImageElement>;
+};
 
 /**
  * {@link Xcoordinate|X} coordinate of an element.
