@@ -5,6 +5,14 @@ import { Refs } from "../types";
 export interface PictureProps {
     /**
      * [OPTIONAL]
+     * [ACCESSIBILITY]
+     *
+     * Accessible alternative text for the image.
+     * If ommited, the image will be marked as decorative.
+     */
+    alt?: string;
+    /**
+     * [OPTIONAL]
      * 
      * Pass React refs to selected elements within the Picture component.
      * 
@@ -25,13 +33,16 @@ export interface PictureProps {
      */
     debug?: boolean;
 };
-export const Picture = ({ refs, debug }: PictureProps) => {
+export const Picture = ({ alt, refs, debug }: PictureProps) => {
 
     return (
         <>
-            <div ref={refs?.picture} className={`better-cover ${debug ? "--debug" : ""}`.trim()}>
+            <div
+                ref={refs?.picture} className={`better-cover ${debug ? "--debug" : ""}`.trim()}
+                inert={debug || (alt && alt !== "") ? undefined : true}
+            >
                 <picture>
-                    <img ref={refs?.image} />
+                    <img ref={refs?.image} alt={alt ?? ""} />
                 </picture>
                 {(refs?.focusZone || debug) && (
                     <>
