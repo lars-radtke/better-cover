@@ -4,6 +4,18 @@ import { Refs } from "../types";
 
 export interface PictureProps {
     /**
+     * [REQUIRED]
+     * 
+     * Fallback image src to be used if no Source matches.
+     */
+    src: string;
+    /**
+     * [OPTIONAL]
+     * 
+     * Fallback image srcSet to be used if no Source matches.
+     */
+    srcSet?: string;
+    /**
      * [OPTIONAL]
      * [ACCESSIBILITY]
      *
@@ -33,7 +45,7 @@ export interface PictureProps {
      */
     debug?: boolean;
 };
-export const Picture = ({ alt, refs, debug }: PictureProps) => {
+export const Picture = ({ src, srcSet, alt, refs, debug }: PictureProps) => {
 
     return (
         <>
@@ -42,7 +54,12 @@ export const Picture = ({ alt, refs, debug }: PictureProps) => {
                 inert={debug || (alt && alt !== "") ? undefined : true}
             >
                 <picture>
-                    <img ref={refs?.image} alt={alt ?? ""} />
+                    <img
+                        ref={refs?.image}
+                        srcSet={srcSet ?? undefined}
+                        src={src}
+                        alt={alt ?? ""}
+                    />
                 </picture>
                 {(refs?.focusZone || debug) && (
                     <>
