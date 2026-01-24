@@ -1,3 +1,4 @@
+import { SourceHTMLAttributes } from "react";
 /**
  * {@link Xcoordinate|X} coordinate of an element.
  */
