@@ -20,7 +20,7 @@ export function isValidSource(
     return false;
   }
 
-  const { size, focusZone } = child.props as SourceProps;
+  const { size, focusZone, srcSet } = child.props as SourceProps;
 
   if (!size || !focusZone) {
     if (isDev)
@@ -53,6 +53,15 @@ export function isValidSource(
   if (focusZone.x + focusZone.width > size.width || focusZone.y + focusZone.height > size.height) {
     if (isDev)
       console.warn("isValidSource: 'focusZone' exceeds 'size' boundaries.", { size, focusZone });
+    return false;
+  }
+
+  if (typeof srcSet === "string" && /\s\d+w(,|\s|$)/.test(srcSet)) {
+    if (isDev)
+      console.warn(
+        "isValidSource: 'srcSet' contains width descriptors (e.g., '100w'), which are not allowed.",
+        srcSet,
+      );
     return false;
   }
 
