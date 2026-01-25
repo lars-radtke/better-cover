@@ -5,87 +5,115 @@ import { Source } from '../../src/components/Source';
 
 const baseUrl = 'https://picsum.photos/';
 
-type CustomArgs = {
-    sizeWidth: number;
-    sizeHeight: number;
-    focusZoneX: number;
-    focusZoneY: number;
-    focusZoneWidth: number;
-    focusZoneHeight: number;
-};
-
-const meta = {
+const meta: Meta<typeof Picture> = {
     component: Picture,
     args: {
-        debug: true,
-        className: 'h75p w75p',
-        targetZoneClassName: 'w50p h75p t50x l50x',
-        focusZoneClassName: '',
-        imageClassName: '',
-        alt: 'Sample image',
-        loading: 'lazy',
-        sizeWidth: 1600,
-        sizeHeight: 900,
-        focusZoneX: 0,
-        focusZoneY: 0,
-        focusZoneWidth: 200,
-        focusZoneHeight: 150,
+        debug: false,
     },
     argTypes: {
-        className: { control: 'text' },
-        targetZoneClassName: { control: 'text' },
-        focusZoneClassName: { control: 'text' },
-        imageClassName: { control: 'text' },
-        alt: { control: 'text' },
-        loading: { control: { type: 'select' }, options: ['lazy', 'eager'] },
         debug: { control: 'boolean' },
-        sizeWidth: { control: { type: 'number', min: 1 }, name: 'Source size.width' },
-        sizeHeight: { control: { type: 'number', min: 1 }, name: 'Source size.height' },
-        focusZoneX: { control: { type: 'number', min: 0 }, name: 'Source focusZone.x' },
-        focusZoneY: { control: { type: 'number', min: 0 }, name: 'Source focusZone.y' },
-        focusZoneWidth: { control: { type: 'number', min: 1 }, name: 'Source focusZone.width' },
-        focusZoneHeight: { control: { type: 'number', min: 1 }, name: 'Source focusZone.height' },
-    },
-    render: (args) => {
-        const {
-            sizeWidth,
-            sizeHeight,
-            focusZoneX,
-            focusZoneY,
-            focusZoneWidth,
-            focusZoneHeight,
-            ...pictureProps
-        } = args as typeof args & CustomArgs;
+    }
+};
+export default meta;
 
-        const src = `${baseUrl}${sizeWidth}/${sizeHeight}`;
+type Story = StoryObj<typeof Picture>;
+
+export const Portrait: Story = {
+    render: () => {
+        const size = { width: 800, height: 1200 };
+        const focusZone = { x: 200, y: 400, width: 200, height: 300 };
+        const src = `${baseUrl}${size.width}/${size.height}`;
         const srcSet = [
-            `${baseUrl}${sizeWidth}/${sizeHeight} 1x`,
-            `${baseUrl}${sizeWidth * 2}/${sizeHeight * 2} 2x`
+            `${baseUrl}${size.width}/${size.height} 1x`,
+            `${baseUrl}${size.width * 2}/${size.height * 2} 2x`
         ].join(', ');
 
         return (
             <Picture
-                {...pictureProps}
+                className="h75p w75p"
+                targetZoneClassName="w50p h75p t50x l50x"
+                alt="Portrait sample"
                 src={src}
+                srcSet={srcSet}
             >
                 <Source
                     srcSet={srcSet}
-                    size={{ width: sizeWidth, height: sizeHeight }}
-                    focusZone={{
-                        x: focusZoneX,
-                        y: focusZoneY,
-                        width: focusZoneWidth,
-                        height: focusZoneHeight,
-                    }}
-                    alt={args.alt}
+                    size={size}
+                    focusZone={focusZone}
+                    media="(orientation: portrait)"
                 />
             </Picture>
         );
     },
-} as Meta<typeof Picture & CustomArgs>; // <-- type assertion here
+};
 
-export default meta;
-type Story = StoryObj<typeof Picture & CustomArgs>;
+export const Landscape: Story = {
+    render: () => {
+        const size = { width: 1200, height: 800 };
+        const focusZone = { x: 400, y: 200, width: 300, height: 200 };
+        const src = `${baseUrl}${size.width}/${size.height}`;
+        const srcSet = [
+            `${baseUrl}${size.width}/${size.height} 1x`,
+            `${baseUrl}${size.width * 2}/${size.height * 2} 2x`
+        ].join(', ');
 
-export const Default: Story = {
+        return (
+            <Picture
+                className="h75p w75p"
+                targetZoneClassName="w50p h75p t50x l50x"
+                alt="Landscape sample"
+                src={src}
+                srcSet={srcSet}
+            >
+                <Source
+                    srcSet={srcSet}
+                    size={size}
+                    focusZone={focusZone}
+                    media="(orientation: landscape)"
+                />
+            </Picture>
+        );
+    },
+};
+
+export const MultiSource: Story = {
+    render: () => {
+        const size1 = { width: 800, height: 800 };
+        const focusZone1 = { x: 200, y: 200, width: 200, height: 150 };
+        const src1 = `${baseUrl}${size1.width}/${size1.height}`;
+        const srcSet1 = [
+            `${baseUrl}${size1.width}/${size1.height} 1x`,
+            `${baseUrl}${size1.width * 2}/${size1.height * 2} 2x`
+        ].join(', ');
+
+        const size2 = { width: 1000, height: 1000 };
+        const focusZone2 = { x: 300, y: 300, width: 300, height: 200 };
+        const srcSet2 = [
+            `${baseUrl}${size2.width}/${size2.height} 1x`,
+            `${baseUrl}${size2.width * 2}/${size2.height * 2} 2x`
+        ].join(', ');
+
+        return (
+            <Picture
+                className="h75p w75p"
+                targetZoneClassName="w50p h75p t50x l50x"
+                alt="Multi source sample"
+                src={src1}
+                srcSet={srcSet1}
+            >
+                <Source
+                    srcSet={srcSet1}
+                    size={size1}
+                    focusZone={focusZone1}
+                    media="(orientation: portrait)"
+                />
+                <Source
+                    srcSet={srcSet2}
+                    size={size2}
+                    focusZone={focusZone2}
+                    media="(orientation: landscape)"
+                />
+            </Picture>
+        );
+    },
 };

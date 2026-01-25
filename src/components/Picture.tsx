@@ -166,22 +166,29 @@ export const Picture = ({
             !imageRef.current
         ) return;
 
-        const sourceSize = activeSource.props.size;
+        const { width: imageW, height: imageH } = activeSource.props.size;
         const focusZone = activeSource.props.focusZone;
 
-        const { scale, x, y } = transform(
-            pictureRect,
-            targetRect,
-            sourceSize.width,
-            sourceSize.height,
-            focusZone
-        );
+        const coverZone = { x: 0, y: 0, width: pictureRect.width, height: pictureRect.height };
+
+        const targetZone = {
+            x: targetRect.x - pictureRect.x,
+            y: targetRect.y - pictureRect.y,
+            width: targetRect.width,
+            height: targetRect.height,
+        };
+
+        const { scale, x, y } = transform(coverZone, targetZone, imageW, imageH, focusZone);
 
         const img = imageRef.current;
+
+        img.style.width = `${imageW}px`;
+        img.style.height = `${imageH}px`;
+        img.style.maxWidth = "none";
+        img.style.maxHeight = "none";
+
+        img.style.transformOrigin = "0 0";
         img.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
-        img.style.transformOrigin = `top left`;
-        img.style.width = `${sourceSize.width}px`;
-        img.style.height = `${sourceSize.height}px`;
 
         if (focusZoneRef.current) {
             const focus = focusZoneRef.current;

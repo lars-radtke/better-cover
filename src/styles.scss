@@ -5,6 +5,8 @@
   &__image {
     display: block;
     position: absolute;
+    width: auto;
+    height: auto;
 
     &.--fallback {
       position: static;

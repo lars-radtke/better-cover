@@ -13,51 +13,54 @@ export const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
 
 /**
- * Measure an element's {@link Rectangle} relative to another element.
+ * This helper is used to pick a “best” translation of a set of valid
+ * translations on an axis (e.g. translations that keep the image covering the coverZone
+ * and/or keep the focusZone inside the targetZone).
  *
- * @param element - The HTML element to measure.
- * @param relativeTo - The DOMRect to measure relative to.
+ * - If `preferred` is inside the interval, it is returned unchanged.
+ * - If `preferred` is left of the interval, `min` is returned.
+ * - If `preferred` is right of the interval, `max` is returned.
+ * - If the interval is empty (`min > max`), no valid value exists. Returns `null`.
  *
- * @returns The measured {@link Rectangle}.
+ * @param min - Inclusive lower bound of the valid interval.
+ * @param max - Inclusive upper bound of the valid interval.
+ * @param preferred - The desired value (e.g. “center like object-position: 50%”).
+ *
+ * @returns A value within [min, max] closest to `preferred`, or `null` if [min, max] is empty.
  */
-export const rectFromElement = (element: HTMLElement, relativeTo: DOMRect): Rectangle => {
-  const rect = element.getBoundingClientRect();
-  return {
-    x: rect.left - relativeTo.left,
-    y: rect.top - relativeTo.top,
-    width: rect.width,
-    height: rect.height,
-  };
+const pickClosestInInterval = (min: number, max: number, preferred: number): number | null => {
+  if (min > max) return null;
+  return clamp(preferred, min, max);
 };
 
 /**
- * Compute an overlap between two ranges.
- * Return the intersected value nearest to the preferred value or null if no intersection exists.
+ * Compute the scale and translation for an image so that:
  *
- * @param min1 - Minimum of the first range.
- * @param max1 - Maximum of the first range.
- * @param min2 - Minimum of the second range.
- * @param max2 - Maximum of the second range.
- * @param preferred - Preferred value within the intersection.
+ * 1) The image always fully covers the coverZone (equal to CSS `object-fit: cover`).
+ *    That means after transform:
+ *      - imageLeft <= coverLeft
+ *      - imageTop  <= coverTop
+ *      - imageRight  >= coverRight
+ *      - imageBottom >= coverBottom
  *
- * @returns The intersected value nearest to the preferred value or null if no intersection exists.
+ * 2) The image is repositioned so that it's correlating (scaled) focusZone is contained within the targetZone
+ *    if possible.
+ *
+ * 3) If the focusZone is too large to fit into the targetZone on an axis, containment is impossible
+ *    on that axis for any larger scale. In that case:
+ *      - align the focusZone midpoint with the targetZone midpoint on that axis
+ *      - keep scaling/positioning such that the image still covers the coverZone
+ *
+ * @param coverZone - Rect describing the container that must be fully covered by the image.
+ * @param targetZone - Rect inside the cover where the focusZone should be placed (cover-local).
+ * @param imageWidth - Intrinsic/rendered base width used for math (must match the element before scaling).
+ * @param imageHeight - Intrinsic/rendered base height used for math (must match the element before scaling).
+ * @param focusZone - Rect inside the image that should land inside the targetZone (image coordinates).
+ *
+ * @returns Transform containing:
+ *   - `scale`: scale factor to apply uniformly (preserves aspect ratio)
+ *   - `x`, `y`: translation to apply before scale (top-left origin)
  */
-export const intersect = (
-  min1: number,
-  max1: number,
-  min2: number,
-  max2: number,
-  preferred: number,
-): number | null => {
-  const min = Math.max(min1, min2);
-  const max = Math.min(max1, max2);
-  if (min <= max) {
-    return clamp(preferred, min, max);
-  }
-  return null;
-};
-
-/** */
 export const transform = (
   coverZone: Rectangle,
   targetZone: Rectangle,
@@ -65,32 +68,30 @@ export const transform = (
   imageHeight: number,
   focusZone: Rectangle,
 ): Transform => {
-  const coverWidth = coverZone.width;
-  const coverHeight = coverZone.height;
+  const coverW = coverZone.width;
+  const coverH = coverZone.height;
 
   const targetX = targetZone.x;
   const targetY = targetZone.y;
-  const targetHeight = targetZone.height;
-  const targetWidth = targetZone.width;
+  const targetW = targetZone.width;
+  const targetH = targetZone.height;
 
   const focusX = focusZone.x;
   const focusY = focusZone.y;
-  const focusHeight = focusZone.height;
-  const focusWidth = focusZone.width;
+  const focusW = focusZone.width;
+  const focusH = focusZone.height;
+
+  const targetMidX = targetX + targetW / 2;
+  const targetMidY = targetY + targetH / 2;
+
+  const focusMidX = focusX + focusW / 2;
+  const focusMidY = focusY + focusH / 2;
 
   /**
    * Calculate minimum scale to cover the targetZone.
    * Equals the base calculation for CSS `object-fit: cover`.
    */
-
-  const minimumCoverScale = Math.max(coverWidth / imageWidth, coverHeight / imageHeight);
-
-  /**
-   * Calculate focusZone size after applying minimumCoverScale.
-   */
-
-  const focusWidthBase = focusWidth * minimumCoverScale;
-  const focusHeightBase = focusHeight * minimumCoverScale;
+  const minCoverScale = Math.max(coverW / imageWidth, coverH / imageHeight);
 
   /**
    * For a given scale:
@@ -105,26 +106,19 @@ export const transform = (
    *
    * Same for y.
    */
-
-  const coverXMin = (scale: number) => coverWidth - imageWidth * scale;
-  const coverXMax = (_scale: number) => 0;
-  const coverYMin = (scale: number) => coverHeight - imageHeight * scale;
-  const coverYMax = (_scale: number) => 0;
+  const coverXMin = (s: number) => coverW - imageWidth * s;
+  const coverXMax = (_s: number) => 0;
+  const coverYMin = (s: number) => coverH - imageHeight * s;
+  const coverYMax = (_s: number) => 0;
 
   /**
    * Preferred "default" translation: Mimic `object-position: 50% 50%`.
    */
-
-  const defaultX = (scale: number) => (coverWidth - imageWidth * scale) / 2;
-  const defaultY = (scale: number) => (coverHeight - imageHeight * scale) / 2;
+  const defaultX = (s: number) => (coverW - imageWidth * s) / 2;
+  const defaultY = (s: number) => (coverH - imageHeight * s) / 2;
 
   /**
-   * The focusZone lives within the image.
-   * For a given scale and translation (x, y):
-   * - focusLeft = x + focusZoneX * scale
-   * - focusRight = x + (focusZoneX + focusZoneWidth) * scale
-   *
-   * To keep the focusZone within the targetZone:
+   * To keep a vlid sized focusZone within the targetZone:
    * - focus's left edge must be at or right of target's left edge
    * - focus's right edge must be at or left of target's right edge
    *
@@ -134,214 +128,98 @@ export const transform = (
    *
    * Same for y.
    */
-
-  const focusXMin = (scale: number) => targetX - focusX * scale;
-  const focusXMax = (scale: number) => targetX + targetWidth - (focusX + focusWidth) * scale;
-  const focusYMin = (scale: number) => targetY - focusY * scale;
-  const focusYMax = (scale: number) => targetY + targetHeight - (focusY + focusHeight) * scale;
+  const focusXMin = (s: number) => targetX - focusX * s;
+  const focusXMax = (s: number) => targetX + targetW - (focusX + focusW) * s;
+  const focusYMin = (s: number) => targetY - focusY * s;
+  const focusYMax = (s: number) => targetY + targetH - (focusY + focusH) * s;
 
   /**
-   * If the focusZone is larger than the targetZone on an axis at the MINIMUM cover scale,
-   * then it can NEVER fully fit inside the targetZone on that axis, because scaling UP would only
-   * make the focusZone bigger.
-   *
-   * In such case:
-   * - keep scale at minimumCoverScale (minimal)
-   * - align both the focusZone and targetZone directional midpoints for symmetric overflow on both sides
+   * Solve placement at scale s.
+   * - If focus fits on an axis: it MUST be fully inside target on that axis (no fallback).
+   * - If focus does NOT fit on an axis: align midpoints on that axis (rule #3), and DO NOT clamp;
+   *   if that alignment breaks cover bounds -> infeasible -> scale up.
    */
+  const solveAtScale = (s: number): { x: number; y: number } | null => {
+    const xMinC = coverXMin(s);
+    const xMaxC = coverXMax(s);
+    const yMinC = coverYMin(s);
+    const yMaxC = coverYMax(s);
 
-  const impossibleX = focusWidthBase > targetWidth;
-  const impossibleY = focusHeightBase > targetHeight;
+    // ---- X axis
+    let x: number | null = null;
+    const focusFitsX = focusW * s <= targetW;
 
-  if (impossibleX || impossibleY) {
-    const scale = minimumCoverScale;
-
-    // Default center positioning as starting point
-    let translateX = defaultX(scale);
-    let translateY = defaultY(scale);
-
-    // Horizontal placement
-    if (impossibleX) {
-      // Midpoint alignment
-      const focusMidX = (focusX + focusWidth / 2) * scale;
-      const targetMidX = targetX + targetWidth / 2;
-      translateX = targetMidX - focusMidX;
+    if (focusFitsX) {
+      const xMin = Math.max(xMinC, focusXMin(s));
+      const xMax = Math.min(xMaxC, focusXMax(s));
+      x = pickClosestInInterval(xMin, xMax, defaultX(s));
+      if (x === null) return null;
     } else {
-      // Constrained placement, closest to default
-      const intersectX = intersect(
-        coverXMin(scale),
-        coverXMax(scale),
-        focusXMin(scale),
-        focusXMax(scale),
-        translateX,
-      );
-
-      if (intersectX !== null) {
-        translateX = intersectX;
-      } else {
-        // Fallback to minimum cover placement
-        translateX = clamp(translateX, coverXMin(scale), coverXMax(scale));
-      }
+      // center-align (symmetric overflow)
+      const desired = targetMidX - focusMidX * s;
+      if (desired < xMinC || desired > xMaxC) return null; // no clamping here!
+      x = desired;
     }
 
-    // Vertical placement
-    if (impossibleY) {
-      // Midpoint alignment
-      const focusMidY = (focusY + focusHeight / 2) * scale;
-      const targetMidY = targetY + targetHeight / 2;
-      translateY = targetMidY - focusMidY;
-    } else {
-      // Constrained placement, closest to default
-      const intersectY = intersect(
-        coverYMin(scale),
-        coverYMax(scale),
-        focusYMin(scale),
-        focusYMax(scale),
-        translateY,
-      );
+    // ---- Y axis
+    let y: number | null = null;
+    const focusFitsY = focusH * s <= targetH;
 
-      if (intersectY !== null) {
-        translateY = intersectY;
-      } else {
-        // Fallback to minimum cover placement
-        translateY = clamp(translateY, coverYMin(scale), coverYMax(scale));
-      }
+    if (focusFitsY) {
+      const yMin = Math.max(yMinC, focusYMin(s));
+      const yMax = Math.min(yMaxC, focusYMax(s));
+      y = pickClosestInInterval(yMin, yMax, defaultY(s));
+      if (y === null) return null;
+    } else {
+      const desired = targetMidY - focusMidY * s;
+      if (desired < yMinC || desired > yMaxC) return null;
+      y = desired;
     }
 
-    // Safety clamp to ensure the image always covers the coverZone.
-    translateX = clamp(translateX, coverXMin(scale), coverXMax(scale));
-    translateY = clamp(translateY, coverYMin(scale), coverYMax(scale));
-
-    return {
-      scale,
-      x: translateX,
-      y: translateY,
-    };
-  }
-
-  /**
-   * For edge cases where translateX/translateY cannot satisfy both cover and containment simultaneously,
-   * e. g. when the focusZone top left corner aligns with it's image top left corner while the
-   * targetZone bottom right corner aligns with at the coverZones bottom right corner.
-   *
-   * In such cases, increase scale beyond minimumCoverScale.
-   */
-
-  /**
-   * Maximum scale that still allows focusZone to fit by size:
-   * - focusWidth * scale <= targetWidth  => scale <= targetWidth / focusWidth
-   * - focusHeight * scale <= targetHeight  => scale <= targetHeight / focusHeight
-   * => focusMaxFit is the smaller of the two.
-   */
-  const maximumScaleThatStillFitsTarget = Math.min(
-    targetWidth / focusWidth,
-    targetHeight / focusHeight,
-  );
-
-  /**
-   * If the minimumCoverScale is already larger than the maximumScaleThatStillFitsTarget,
-   * treat translation as impossible.
-   */
-  if (minimumCoverScale > maximumScaleThatStillFitsTarget) {
-    const scale = minimumCoverScale;
-    const safeCenterX = (focusX + focusWidth / 2) * scale;
-    const safeCenterY = (focusY + focusHeight / 2) * scale;
-
-    let translateX = targetX + targetWidth / 2 - safeCenterX;
-    let translateY = targetY + targetHeight / 2 - safeCenterY;
-
-    translateX = clamp(translateX, coverXMin(scale), coverXMax(scale));
-    translateY = clamp(translateY, coverYMin(scale), coverYMax(scale));
-
-    return { scale, x: translateX, y: translateY };
-  }
-
-  /**
-   * For a given scale, check if:
-   * - if the image covers the coverZone
-   * - if the focusZone can be placed entirely within the targetZone
-   *
-   * If both checks pass, the given scale is feasable.
-   */
-  const feasableAtScale = (scale: number): boolean => {
-    const intersectX = intersect(
-      coverXMin(scale),
-      coverXMax(scale),
-      focusXMin(scale),
-      focusXMax(scale),
-      defaultX(scale),
-    );
-    const intersectY = intersect(
-      coverYMin(scale),
-      coverYMax(scale),
-      focusYMin(scale),
-      focusYMax(scale),
-      defaultY(scale),
-    );
-    return intersectX !== null && intersectY !== null;
+    return { x, y };
   };
 
-  let scale = minimumCoverScale;
-
   /**
-   * Binary search between minimumCoverScale and maximumScaleThatStillFitsTarget to find the smallest feasable scale.
+   * If there are conflicting constraints at minCoverScale, find a feasible scale by growing.
    */
-  if (!feasableAtScale(scale)) {
-    let minimum = minimumCoverScale;
-    let maximum = maximumScaleThatStillFitsTarget;
-    let feasable = false;
+  let low = minCoverScale;
+  let high = low;
+  let sol = solveAtScale(high);
 
-    /**
-     * Precision threshold: 0.0000001 => '1e-7'
-     */
-    const EPSILON = 1e-7;
-    const MAX_ITERATIONS = 100;
-    let iteration = 0;
-
-    while (maximum - minimum > EPSILON && iteration < MAX_ITERATIONS) {
-      const candidateScale = (minimum + maximum) / 2;
-
-      if (feasableAtScale(candidateScale)) {
-        // If candidateScale is feasable, search for smaller feasable scales
-        feasable = true;
-        maximum = candidateScale;
-      } else {
-        // If candidateScale is not feasable, search for larger scales
-        minimum = candidateScale;
-      }
-      iteration++;
-    }
-
-    if (feasable) {
-      scale = maximum;
-    }
+  let growIter = 0;
+  const MAX_GROW = 80;
+  while (sol === null && growIter < MAX_GROW) {
+    high *= 1.25;
+    sol = solveAtScale(high);
+    growIter++;
   }
 
+  // Fallback
+  if (sol === null) {
+    const s = minCoverScale;
+    return {
+      scale: s,
+      x: clamp(defaultX(s), coverXMin(s), coverXMax(s)),
+      y: clamp(defaultY(s), coverYMin(s), coverYMax(s)),
+    };
+  }
   /**
-   * Final selection (and failsafe) of translateX and translateY from the intersection closest to default.
+   * Binary search between minimumCoverScale and maximumScaleThatStillFitsTarget to find the smallest feasable scale.
+   * Precision threshold: 0.0000001 => '1e-7'
    */
+  const EPSILON = 1e-7;
+  for (let i = 0; i < 90 && high - low > EPSILON; i++) {
+    const mid = (low + high) / 2;
+    if (solveAtScale(mid) !== null) high = mid;
+    else low = mid;
+  }
 
-  const translateX =
-    intersect(
-      coverXMin(scale),
-      coverXMax(scale),
-      focusXMin(scale),
-      focusXMax(scale),
-      defaultX(scale),
-    ) ?? clamp(defaultX(scale), coverXMin(scale), coverXMax(scale));
-
-  const translateY =
-    intersect(
-      coverYMin(scale),
-      coverYMax(scale),
-      focusYMin(scale),
-      focusYMax(scale),
-      defaultY(scale),
-    ) ?? clamp(defaultY(scale), coverYMin(scale), coverYMax(scale));
+  const scale = high;
+  const final = solveAtScale(scale)!;
 
   return {
     scale,
-    x: translateX,
-    y: translateY,
+    x: final.x,
+    y: final.y,
   };
 };
