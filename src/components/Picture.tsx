@@ -108,6 +108,9 @@ export const Picture = ({
     refs,
     debug = false
 }: PictureProps) => {
+
+    // Dev mode checks
+
     const isDev =
         typeof process.env.NODE_ENV === "undefined" || process.env.NODE_ENV !== "production";
 
@@ -115,6 +118,15 @@ export const Picture = ({
 
     if (validChildren.length === 0 && isDev)
         console.error("[Better Cover] No valid Source components provided as children to Picture element.");
+
+    // create required refs if not provided
+
+    const pictureRef = refs?.picture ?? React.useRef<HTMLDivElement>(null);
+    const targetZoneRef = refs?.targetZone ?? React.useRef<HTMLDivElement>(null);
+    const focusZoneRef = (focusZoneClassName || debug) ? (refs?.focusZone ?? React.useRef<HTMLDivElement>(null)) : undefined;
+    const imageRef = refs?.image ?? React.useRef<HTMLImageElement>(null);
+
+    // Prepare CSS class names
 
     const PictureCSS = trimString([
         "better-cover",
@@ -141,14 +153,14 @@ export const Picture = ({
     return (
         <>
             <div
-                ref={refs?.picture}
+                ref={pictureRef}
                 className={PictureCSS}
                 inert={debug || (alt && alt !== "") ? undefined : true}
             >
                 <picture>
                     {validChildren}
                     <img
-                        ref={refs?.image}
+                        ref={imageRef}
                         srcSet={srcSet ?? undefined}
                         src={src}
                         alt={alt ?? ""}
@@ -161,13 +173,13 @@ export const Picture = ({
                         {(refs?.focusZone || debug || focusZoneClassName) && (
                             <>
                                 <div
-                                    ref={refs?.focusZone}
+                                    ref={focusZoneRef}
                                     className={FocusZoneCSS}
                                 />
                             </>
                         )}
                         <div
-                            ref={refs?.targetZone}
+                            ref={targetZoneRef}
                             className={TargetZoneCSS}
                         />
                     </>
