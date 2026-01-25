@@ -1,0 +1,255 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+b,
+u,
+i,
+center,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+hgroup,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol,
+ul {
+  list-style: none;
+}
+blockquote,
+q {
+  quotes: none;
+}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* Fix storybook */
+html,
+body,
+#storybook-root {
+  height: 100vh;
+}
+
+#storybook-root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* percentage size */
+.w10p {
+  width: 10%;
+}
+.w25p {
+  width: 25%;
+}
+.w50p {
+  width: 50%;
+}
+.w75p {
+  width: 75%;
+}
+
+.h10p {
+  height: 10%;
+}
+.h25p {
+  height: 25%;
+}
+.h50p {
+  height: 50%;
+}
+.h75p {
+  height: 75%;
+}
+
+/* percentage position */
+.t25p {
+  top: 25%;
+}
+.t50p {
+  top: 50%;
+}
+.t75p {
+  top: 75%;
+}
+
+.l25p {
+  left: 25%;
+}
+.l50p {
+  left: 50%;
+}
+.l75p {
+  left: 75%;
+}
+
+/* fixed size */
+.w10x {
+  width: 100px;
+}
+.w25x {
+  width: 250px;
+}
+.w50x {
+  width: 500px;
+}
+.w75x {
+  width: 750px;
+}
+
+.h10x {
+  height: 100px;
+}
+.h25x {
+  height: 250px;
+}
+.h50x {
+  height: 500px;
+}
+.h75x {
+  height: 750px;
+}
+
+/* fixed position */
+.t25x {
+  top: 25px;
+}
+.t50x {
+  top: 50px;
+}
+.t75x {
+  top: 75px;
+}
+.t100x {
+  top: 100px;
+}
+.t200x {
+  top: 200px;
+}
+.t300x {
+  top: 300px;
+}
+
+.l25x {
+  left: 25px;
+}
+.l50x {
+  left: 50px;
+}
+.l75x {
+  left: 75px;
+}
+.l100x {
+  left: 100px;
+}
+.l200x {
+  left: 200px;
+}
+.l300x {
+  left: 300px;
+}

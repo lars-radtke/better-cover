@@ -1,5 +1,6 @@
 .better-cover {
   position: relative;
+  overflow: hidden;
 
   &__image {
     display: block;
@@ -21,15 +22,26 @@
   }
 
   &.--debug {
-    border: 2px dotted black;
+    img {
+      opacity: 0.66;
+    }
+
+    &:hover {
+      outline: 2px dotted black;
+      overflow: visible;
+
+      img {
+        opacity: 0.33;
+      }
+    }
 
     .better-cover__focus-zone {
-      border: 2px solid limegreen;
+      outline: 2px solid limegreen;
       background-color: rgba(0, 255, 0, 0.2);
     }
 
     .better-cover__target-zone {
-      border: 2px dashed red;
+      outline: 2px dashed red;
       background-color: rgba(255, 0, 0, 0.2);
     }
   }
