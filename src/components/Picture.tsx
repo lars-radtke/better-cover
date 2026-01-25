@@ -99,13 +99,14 @@ export const Picture = ({
     children,
     src,
     srcSet,
-    className,
-    targetZoneClassName,
-    focusZoneClassName,
-    imageClassName,
+    className = "",
+    targetZoneClassName = "",
+    focusZoneClassName = "",
+    imageClassName = "",
     alt,
     loading = "lazy",
-    refs, debug
+    refs,
+    debug = false
 }: PictureProps) => {
     const isDev =
         typeof process.env.NODE_ENV === "undefined" || process.env.NODE_ENV !== "production";
@@ -118,7 +119,7 @@ export const Picture = ({
     const PictureCSS = trimString([
         "better-cover",
         className,
-        debug && "--debug"
+        debug ? "--debug" : ""
     ].join(" "));
 
     const FocusZoneCSS = trimString([
@@ -134,7 +135,7 @@ export const Picture = ({
     const ImageCSS = trimString([
         "better-cover__image",
         imageClassName,
-        validChildren.length === 0 && "--fallback"
+        validChildren.length === 0 ? "--fallback" : ""
     ].join(" "));
 
     return (
