@@ -132,6 +132,7 @@ html,
 body,
 #storybook-root {
   height: 100vh;
+  overflow: clip;
 }
 
 #storybook-root {

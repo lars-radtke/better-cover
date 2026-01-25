@@ -9,9 +9,9 @@ import { Source, SourceProps } from "../components/Source";
  * - No negative values in focusZone Position (< 0).
  * - focusZone must not exceed size boundaries.
  */
-export function isValidSource(
+export const isValidSource = (
   child: React.ReactNode,
-): child is React.ReactElement<SourceProps, typeof Source> {
+): child is React.ReactElement<SourceProps, typeof Source> => {
   const isDev =
     typeof process.env.NODE_ENV === "undefined" || process.env.NODE_ENV !== "production";
 
@@ -66,4 +66,4 @@ export function isValidSource(
   }
 
   return true;
-}
+};

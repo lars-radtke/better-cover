@@ -1,10 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { Refs } from "../types";
 import { isValidSource } from "../utils/isValidSource";
 import { trimString } from "../utils/trimString";
 import { SourceElement } from "./Source";
+import { useElementRect } from "../hooks/useElementRect";
+import { useScreen } from "../hooks/useScreen";
+import { useActiveSource } from "../hooks/useActiveSource";
+import { transform } from "../utils/imageTransform";
 
 /**
  * Props for the {@link Picture} component.
@@ -110,24 +114,13 @@ export const Picture = ({
 }: PictureProps) => {
 
     // Dev mode checks
-
     const isDev =
         typeof process.env.NODE_ENV === "undefined" || process.env.NODE_ENV !== "production";
-
     const validChildren = React.Children.toArray(children).filter(isValidSource);
-
     if (validChildren.length === 0 && isDev)
         console.error("[Better Cover] No valid Source components provided as children to Picture element.");
 
-    // create required refs if not provided
-
-    const pictureRef = refs?.picture ?? React.useRef<HTMLDivElement>(null);
-    const targetZoneRef = refs?.targetZone ?? React.useRef<HTMLDivElement>(null);
-    const focusZoneRef = (focusZoneClassName || debug) ? (refs?.focusZone ?? React.useRef<HTMLDivElement>(null)) : undefined;
-    const imageRef = refs?.image ?? React.useRef<HTMLImageElement>(null);
-
     // Prepare CSS class names
-
     const PictureCSS = trimString([
         "better-cover",
         className,
@@ -150,6 +143,63 @@ export const Picture = ({
         validChildren.length === 0 ? "--fallback" : ""
     ].join(" "));
 
+    // create required refs if not provided
+    const pictureRef = refs?.picture ?? React.useRef<HTMLDivElement>(null);
+    const targetZoneRef = refs?.targetZone ?? React.useRef<HTMLDivElement>(null);
+    const focusZoneRef = refs?.focusZone ?? React.useRef<HTMLDivElement>(null);
+    const imageRef = refs?.image ?? React.useRef<HTMLImageElement>(null);
+
+    // initialize observers
+    const screen = useScreen();
+    const pictureRect = useElementRect(pictureRef);
+    const targetRect = useElementRect(targetZoneRef);
+    const activeSource = useActiveSource(validChildren);
+
+    // ✨ Let the Magic start ✨
+    useLayoutEffect(() => {
+        if (
+            validChildren.length === 0 ||
+            !pictureRect ||
+            !targetRect ||
+            !activeSource?.props.size ||
+            !activeSource?.props.focusZone ||
+            !imageRef.current
+        ) return;
+
+        const sourceSize = activeSource.props.size;
+        const focusZone = activeSource.props.focusZone;
+
+        const { scale, x, y } = transform(
+            pictureRect,
+            targetRect,
+            sourceSize.width,
+            sourceSize.height,
+            focusZone
+        );
+
+        const img = imageRef.current;
+        img.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
+        img.style.transformOrigin = `top left`;
+        img.style.width = `${sourceSize.width}px`;
+        img.style.height = `${sourceSize.height}px`;
+
+        if (focusZoneRef.current) {
+            const focus = focusZoneRef.current;
+            focus.style.left = `${focusZone.x * scale + x}px`;
+            focus.style.top = `${focusZone.y * scale + y}px`;
+            focus.style.width = `${focusZone.width * scale}px`;
+            focus.style.height = `${focusZone.height * scale}px`;
+        }
+    }, [
+        screen,
+        validChildren,
+        pictureRect,
+        targetRect,
+        activeSource,
+        focusZoneRef,
+        imageRef
+    ])
+
     return (
         <>
             <div
@@ -170,7 +220,7 @@ export const Picture = ({
                 </picture>
                 {validChildren.length !== 0 && (
                     <>
-                        {(refs?.focusZone || debug || focusZoneClassName) && (
+                        {(debug || focusZoneClassName) && (
                             <>
                                 <div
                                     ref={focusZoneRef}

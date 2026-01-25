@@ -4,6 +4,6 @@
  *
  * @param str - The input string to be trimmed.
  */
-export function trimString(str: string): string {
+export const trimString = (str: string): string => {
   return str.trim().replace(/\s{2,}/g, " ");
-}
+};
