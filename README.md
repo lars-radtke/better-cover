@@ -40,20 +40,13 @@ _Defaults to `false`._
 
 ### Source
 - `srcSet`: String (required)  
-Comma-separated list of one or more image URLs and their **pixel density** descriptors.  
-  <div style="padding: 16px 24px 8px 24px; border: 1px solid orange; border-radius: 8px; background-color: rgba(255, 140, 0, 0.05); margin-bottom: 1rem;">
-    <p style="display: flex; gap: 8px">
-   <span>⚠️</span><span><b>Important</b></span>
-    </p>
-  <p>Sources with <b>width descriptiors</b> will be omitted.</p>
-  </div>
-  <div style="padding: 16px 24px 8px 24px; border: 1px solid orange; border-radius: 8px; background-color: rgba(255, 140, 0, 0.05); margin-bottom: 1rem;">
-    <p style="display: flex; gap: 8px">
-   <span>⚠️</span><span><b>Important</b></span>
-    </p>
-  <p>An individual Source's images must be of the same aspect ratio.</p>
-  <p>If you require differently sized images, use separate Source Elements with individual <code>media</code> attributes.</p>
-  </div>
+Comma-separated list of one or more image URLs and their **pixel density** descriptors.   
+  >⚠️ **Important**  
+  > Sources with **width descriptiors** will be omitted.
+  
+  >⚠️ **Important**  
+  > An individual Source's images must be of the same aspect ratio.  
+  > If you require differently sized images, use separate Source Elements with individual `media` attributes.
 
 - `size`: Object (required)  
 Width and height of the image in pixels.  
