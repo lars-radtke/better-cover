@@ -3,7 +3,7 @@
 Better Cover is a React component for building image elements _with aim assist_.
 
 ## Getting started
-Better Cover requires <b>React v18.2.0 or later.</b>
+Better Cover requires <b>React v19.</b>
 ```bash
 npm install better-cover
 ```
