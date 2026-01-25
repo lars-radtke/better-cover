@@ -4,7 +4,7 @@ import React from "react";
 import { Refs } from "../types";
 import { isValidSource } from "../utils/isValidSource";
 import { trimString } from "../utils/trimString";
-import { Source, SourceElement } from "./Source";
+import { SourceElement } from "./Source";
 
 /**
  * Props for the {@link Picture} component.
