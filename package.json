@@ -23,7 +23,9 @@
         "build": "npm run build:js && npm run build:css",
         "build:js": "tsup src/index.ts --format esm --dts --clean",
         "build:css": "sass src/styles.scss dist/styles.css --no-source-map --style=compressed",
-        "prepublishOnly": "npm run build"
+        "prepublishOnly": "npm run build",
+        "dev": "storybook dev -p 6006",
+        "build:storybook": "storybook build"
     },
     "devDependencies": {
         "@types/node": "^25.0.10",
@@ -32,7 +34,10 @@
         "react-dom": "^19",
         "sass": "^1.97.3",
         "tsup": "^8",
-        "typescript": "^5"
+        "typescript": "^5",
+        "storybook": "^10.2.0",
+        "@storybook/react-webpack5": "^10.2.0",
+        "@storybook/addon-webpack5-compiler-swc": "^4.0.2"
     },
     "author": "Lars Radtke (https://github.com/lars-radtke)",
     "type": "module",
