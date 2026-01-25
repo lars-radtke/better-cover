@@ -24,8 +24,8 @@
         "build:js": "tsup src/index.ts --format esm --dts --clean",
         "build:css": "sass src/styles.scss dist/styles.css --no-source-map --style=compressed",
         "prepublishOnly": "npm run build",
-        "dev": "storybook dev -p 6006",
-        "build:storybook": "storybook build"
+        "dev": "npm run build:css && storybook dev -p 6006",
+        "build:storybook": "npm run build:css && storybook build"
     },
     "devDependencies": {
         "@types/node": "^25.0.10",
