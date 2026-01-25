@@ -35,7 +35,7 @@ export interface Ycoordinate {
 }
 
 /**
- * {@link Position} of an element in a 2D plane composed of {@link Xcoordinate|X} and {@link Ycoordinate|Y} coordinates.
+ * {@link Position} of an element composed of {@link Xcoordinate|X} and {@link Ycoordinate|Y} coordinates.
  */
 export interface Position extends Xcoordinate, Ycoordinate {}
 
@@ -92,3 +92,13 @@ export type SourceNativeAttributes = Omit<
   SourceHTMLAttributes<HTMLSourceElement>,
   "type" | "src" | "sizes" | "height" | "width"
 >;
+
+/**
+ * {@link Transform} information composed of {@link Position} and scale factor.
+ */
+export interface Transform extends Position {
+  /**
+   * Scale factor applied to the element.
+   */
+  scale: number;
+}
