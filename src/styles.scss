@@ -7,7 +7,9 @@
     position: absolute;
 
     &.--fallback {
-      inset: 0;
+      position: static;
+      height: 100%;
+      width: 100%;
       object-fit: cover;
       object-position: center center;
     }
@@ -22,17 +24,15 @@
   }
 
   &.--debug {
+    outline: 2px solid black;
+
     img {
       opacity: 0.66;
+      outline: 2px dotted black;
     }
 
     &:hover {
-      outline: 2px dotted black;
       overflow: visible;
-
-      img {
-        opacity: 0.33;
-      }
     }
 
     .better-cover__focus-zone {

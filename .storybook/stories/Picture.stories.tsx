@@ -19,7 +19,7 @@ const meta = {
     args: {
         debug: true,
         className: 'h75p w75p',
-        targetZoneClassName: '',
+        targetZoneClassName: 'w50p h75p t50x l50x',
         focusZoneClassName: '',
         imageClassName: '',
         alt: 'Sample image',
