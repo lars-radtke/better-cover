@@ -1,6 +1,8 @@
 "use client";
 
+import React from "react";
 import { Refs } from "../types";
+import { isValidSource } from "../utils/isValidSource";
 import { trimString } from "../utils/trimString";
 import { Source, SourceElement } from "./Source";
 
@@ -94,6 +96,7 @@ export interface PictureProps {
 };
 
 export const Picture = ({
+    children,
     src,
     srcSet,
     className,
@@ -104,6 +107,13 @@ export const Picture = ({
     loading = "lazy",
     refs, debug
 }: PictureProps) => {
+    const isDev =
+        typeof process.env.NODE_ENV === "undefined" || process.env.NODE_ENV !== "production";
+
+    const validChildren = React.Children.toArray(children).filter(isValidSource);
+
+    if (validChildren.length === 0 && isDev)
+        console.error("[Better Cover] No valid Source components provided as children to Picture element.");
 
     const PictureCSS = trimString([
         "better-cover",
@@ -121,6 +131,12 @@ export const Picture = ({
         targetZoneClassName
     ].join(" "));
 
+    const ImageCSS = trimString([
+        "better-cover__image",
+        imageClassName,
+        validChildren.length === 0 && "--fallback"
+    ].join(" "));
+
     return (
         <>
             <div
@@ -129,27 +145,32 @@ export const Picture = ({
                 inert={debug || (alt && alt !== "") ? undefined : true}
             >
                 <picture>
+                    {validChildren}
                     <img
                         ref={refs?.image}
                         srcSet={srcSet ?? undefined}
                         src={src}
                         alt={alt ?? ""}
                         loading={loading}
-                        className={imageClassName ? imageClassName : undefined}
+                        className={ImageCSS}
                     />
                 </picture>
-                {(refs?.focusZone || debug || focusZoneClassName) && (
+                {validChildren.length !== 0 && (
                     <>
+                        {(refs?.focusZone || debug || focusZoneClassName) && (
+                            <>
+                                <div
+                                    ref={refs?.focusZone}
+                                    className={FocusZoneCSS}
+                                />
+                            </>
+                        )}
                         <div
-                            ref={refs?.focusZone}
-                            className={FocusZoneCSS}
+                            ref={refs?.targetZone}
+                            className={TargetZoneCSS}
                         />
                     </>
                 )}
-                <div
-                    ref={refs?.targetZone}
-                    className={TargetZoneCSS}
-                />
             </div>
         </>
     )

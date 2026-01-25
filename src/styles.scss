@@ -1,9 +1,15 @@
 .better-cover {
   position: relative;
 
-  img {
+  &__image {
     display: block;
     position: absolute;
+
+    &.--fallback {
+      inset: 0;
+      object-fit: cover;
+      object-position: center center;
+    }
   }
 
   &__focus-zone {
