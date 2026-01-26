@@ -26,25 +26,20 @@
   }
 
   &.--debug {
-    outline: 2px solid black;
+    border: 2px solid black;
+    overflow: visible;
 
     img {
-      opacity: 0.35;
-      outline: 2px dotted black;
-    }
-
-    &:hover {
-      overflow: visible;
+      opacity: 0.5;
+      border: 2px dotted black;
     }
 
     .better-cover__focus-zone {
-      outline: 2px solid limegreen;
-      background-color: rgba(0, 255, 0, 0.2);
+      background-color: rgba(0, 255, 0, 0.3);
     }
 
     .better-cover__target-zone {
-      outline: 2px dashed red;
-      background-color: rgba(255, 0, 0, 0.2);
+      background-color: rgba(255, 0, 0, 0.15);
     }
   }
 }
