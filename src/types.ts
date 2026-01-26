@@ -1,7 +1,5 @@
 import { SourceHTMLAttributes } from "react";
 
-export const REF_KEYS = ["picture", "targetZone", "focusZone", "image"] as const;
-
 /**
  * Maps React DOM refs to their corresponding {@link Picture} component elements.
  *
