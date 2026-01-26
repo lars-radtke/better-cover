@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Rectangle, Size, SourceNativeAttributes } from "../types";
-import { PictureElement as Picture } from "../../test/Picture2";
+import { PictureElement as Picture } from "./Picture";
 
 /**
  * Props for the {@link Source} component used within the {@link Picture}.

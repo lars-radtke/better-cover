@@ -10,9 +10,6 @@ import { useScreen } from "../hooks/useScreen";
 import { useActiveSource } from "../hooks/useActiveSource";
 import { transform } from "../utils/imageTransform";
 
-/**
- * Props for the {@link Picture} component.
- */
 export interface PictureProps {
     /**
      * [REQUIRED]
@@ -34,17 +31,17 @@ export interface PictureProps {
      */
     srcSet?: string;
     /**
-     * [OPTIONAL]
+     * [REQUIRED]
      *
      * CSS class names to apply to the Picture component.
      */
-    className?: string;
+    className: string;
     /**
-     * [OPTIONAL]
+     * [REQUIRED]
      *
      * CSS class names to apply to the targetZone element.
      */
-    targetZoneClassName?: string;
+    targetZoneClassName: string;
     /**
      * [OPTIONAL]
      *
@@ -79,7 +76,7 @@ export interface PictureProps {
     /**
      * [OPTIONAL]
      * 
-     * Pass React refs to selected elements within the Picture component.
+     * Pass React refs to inner elements within the Picture component.
      * 
      * ```
      * refs = {  
@@ -99,6 +96,24 @@ export interface PictureProps {
     debug?: boolean;
 };
 
+/**
+ * [ BETTER COVER ]
+ * 
+ * {@link Picture} component.
+ * 
+ * [Required props]
+ * @param children - Source Elements to be used within the Picture component.
+ * @param src - Fallback image src to be used if no Source matches.
+ * @param srcSet - Fallback image srcSet to be used if no Source matches.
+ * @param className - CSS class names to apply to the Picture component.
+ * @param targetZoneClassName - CSS class names to apply to the targetZone element.
+ * @param focusZoneClassName - CSS class names to apply to the focusZone element.
+ * @param imageClassName - CSS class names to apply to the image element.
+ * @param alt - Accessible alternative text for the image.
+ * @param loading - Loading behavior of the image.
+ * @param refs - Pass React refs to selected elements within the Picture component.
+ * @param debug - Display overlays for debugging purposes.
+ */
 export const Picture = ({
     children,
     src,
