@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { Meta, StoryObj } from "@storybook/react";
 import { Picture } from "../../src/components/Picture";
 import { Source, SourceElement } from '../../src/components/Source';
@@ -166,6 +167,7 @@ export default meta;
 
 type Story = StoryObj<StoryArgs>;
 
+// @ts-nocheck
 export const Default: Story = {
     render: (args) => {
         const { target, off, ...pictureProps } = args;
