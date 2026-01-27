@@ -1,5 +1,7 @@
+# Better Cover
 
-https://github.com/user-attachments/assets/19850540-a837-4b17-acfd-196f55fda31b
+![hero](https://github.com/user-attachments/assets/8dcff9dd-7bf0-4bee-a33c-7e61aa55b2c0)
+
 
 Your client found a wonderful stock picture. It's an exact match to the feeling they want want to convey on their super special landing page. The dynamic is _stunning_. It draws the customers right in and leaves them in awe. It'll boost conversion by levels over 9000, maybe even higher. Its the best picture in the history of pictures, maybe ever and the _whole_ content team is ecstatic! 
 
