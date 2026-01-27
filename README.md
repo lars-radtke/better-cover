@@ -1,4 +1,6 @@
 
+https://github.com/user-attachments/assets/19850540-a837-4b17-acfd-196f55fda31b
+
 Your client found a wonderful stock picture. It's an exact match to the feeling they want want to convey on their super special landing page. The dynamic is _stunning_. It draws the customers right in and leaves them in awe. It'll boost conversion by levels over 9000, maybe even higher. Its the best picture in the history of pictures, maybe ever and the _whole_ content team is ecstatic! 
 
 There's only one catch – it doesn't fit the CD hero section's height on anything above LG. That woman's perfect smile is gone, cut off below and now all you can see are  just two empty eyes. On mobile its even worse: It's just a nose and two front teeth!
@@ -46,35 +48,36 @@ Well, let's toy with it' shall we?
   Assuming the image is set to what-should-be-standard `object-fit: cover` and default `object-position: 50% 50%`, it get centered within it's containing element.  
   But as the size of that container element changes, so does what we can see of the image – and it just so happens that my cute plush toy (that everybody is supposed to see!) is getting cropped.
 
-    <video controls style="padding-left: 10.5%; width: 75%;">
-      <source src="./public/video/001.mp4" type="video/mp4" >
-    </video>
+    https://github.com/user-attachments/assets/094fb3b1-6e78-418c-9aae-a00dd787463e
+
+
 
 2. **Better Cover Component**  
   We really, really want that cute plush toy to always be seen in the container!  
-  
-    And alas, Better Cover helps us to achieve that! Here you can see, the plush toy stays put at the edge of the container when normally it would  be cropped in that direction:
-   
-    <video controls style="padding-left: 10.5%; width: 75%;">
-      <source src="./public/video/002.mp4" type="video/mp4" >
-    </video>
 
-3. **How does it work?**  
+    And alas, Better Cover helps us to achieve that! Here you can see, the plush toy stays put at the edge of the container when normally it would  be cropped in that direction:
+
+      https://github.com/user-attachments/assets/a2bd8a77-3e3b-4a0f-b89d-a28dbeb4f448
+
+
+4. **How does it work?**  
   With Better Cover, you define a 'Focus Zone' within it's correlating image source. This image is then matched against a 'Target Zone' and transformed in a way that the Focus Zone is kept within the Target Zone.  
   Thinking of these Zones as boxes, it looks like this:
-   
-    <video controls style="padding-left: 10.5%; width: 75%;">
-      <source src="./public/video/003.mp4" type="video/mp4" >
-    </video>
 
-4. **Flexible and Customizable**  
+      https://github.com/user-attachments/assets/3312bf8e-c8a1-4ca8-9de1-e0c73fd035a3
+
+
+
+    
+
+5. **Flexible and Customizable**  
   Better Cover provides a range of options for you to make your images most important part always visible: If you are using different images for varying viewport widths for example, you can create individual [Sources](#source), each with their own `@media` and Focus Zone properties. Additionally, to layout the Target Zone, you can simply pass CSS classes!
 
     In the previous videos, the Target Zone covered the whole width and height of the container – let's instead go with a Target Zone that covers only the right half of the container. And to spice it up, we don't go after the plush toy this time, but rather the handheld console:
    
-    <video controls style="padding-left: 10.5%; width: 75%;">
-      <source src="./public/video/004.mp4" type="video/mp4" >
-    </video>
+    https://github.com/user-attachments/assets/68c1733d-ac9d-485d-8792-b5470eccd20e
+
+
 
 ## Exports
 ### Picture
@@ -124,16 +127,16 @@ Well, let's toy with it' shall we?
   Comma-separated list of one or more image URLs and their **pixel density** descriptors.   
   >⚠️ **Important**  
   > Sources with **width descriptors** will be omitted.
+  
+  >⚠️ **Important**  
   > An individual Source's images must be of the same aspect ratio.  
   > If you require differently sized images, use separate Source Elements with individual `media` attributes.
 
 * `size`: Object (required)  
   Width and height of the image in pixels.  
-  _Based on the 1x resolution._
 
 * `focusZone`: Object (required)  
   X and Y Position and width and height of the Focus Zone in pixels.  
-  _Based on the 1x resolution._
 
 * `media`: String  
   Specify the Source's [media query](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Media_queries).
