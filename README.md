@@ -40,7 +40,7 @@ Note: The image you see here is the actual image used in the following videos.
 
 ![This is my grey 3 seater couch. it's decorated with a bunch of grey and sand-colored pillows. There's a handheld console on the backrest, some Art hanging above it and a stuffed animal tucked between the pillows.](./public/images/example.jpg)
 
-There are some items cluttered around it, one of which happens to be a [plush toy of a youtuber's cat](!https://www.youtube.com/watch?v=Oc91iOxcB3c).  
+There are some items cluttered around it, one of which happens to be a [plush toy of a youtuber's cat](https://www.youtube.com/watch?v=Oc91iOxcB3c).  
 
 Well, let's toy with it' shall we?
 
