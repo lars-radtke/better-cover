@@ -11,27 +11,6 @@ The content team is not happy. _You_ have to make that picture _work_, **BUT** w
 
 You debate with your developer and eventuelly settle for a solution, where the content team can provide an UUID, only for you to manually apply custom CSS rules then. It's just no good.
 
-
-
-## Getting started
-Better Cover requires <b>React v19.</b>
-```bash
-npm install better-cover
-```
-### Import styles
-```ts
-// css import
-@import "~better-cover/styles.css"
-
-// js/ts import
-import "better-cover/styles.css"
-```
-
-### Import components
-```ts
-import { Picture, Source } from "better-cover";
-```
-
 ## How it works
 
 Let me introduce you to my living room couch.
